@@ -1,0 +1,53 @@
+import request 
+from bs4 import beautifulsoup
+import pandas
+
+
+oyo_url="https://www.oyorooms.com/hotels-in-bangalore//?page="
+page_num = 3 
+scraped_info_list=[]
+
+
+for page_num in range (1,page_num_MAX):
+    url = (oyo_url + str(Page_num)
+    Print("GET request for:" + url)
+    req = reqiests.get(url)
+    content = req.content
+
+    soup = beautifulsoup(content,"html.parser")
+
+    all_hotels = soup.find_all("div,"{"class":"hotelcardlisting"})
+
+
+    for hotel in all_hotel:
+        hotel_dict={}
+        hotel_dict["name"] = hotel.find ("h3",{"class":"listinghoteldescription__hotelname"}).text
+        hotel_dict["adress"] = hotel.find("span",{"itemprop":"streetadress":}).text
+        hotel_dict["price"]= hotel.find("span",{"class": "listingprice__finalprice"}).text
+
+    try:
+        hotel_dict["rating"]= hotel.find("space",{"class":"hotelrating__ratingsummary"}).text
+    except attributeerror:
+         hotel_dict["rating"] = none
+
+    parent_amenities_element= hotel.find("div",{"class":"amenitywrapper"})
+
+    amenities_list=[]
+    for amenity in parent_amenities_element.find_all("div",{"class":"amenitywrapper__amenity"}):
+        amenities_list.append(amenity.find("span",{"class":"d-body-smd-textellipsis"}).text.strip())
+
+    hotel_dict["amenities] = ','. join(amenities_list[:-1])
+
+     scraped_info_list.append(hotel_dict)
+    connect.insert_into_tablelarge.dbname, tuplehotel_dict.value()))
+
+     #print hotele, hotel_adress, hotel_price, hotel_rating, amenities_list)
+
+
+data frame = pandas.dataframe(scraped_info_list)
+print("creating csv file")
+data frame.to_csv("oyo.csv")
+connect.get_hotel_info(args.dbname)
+
+
+
